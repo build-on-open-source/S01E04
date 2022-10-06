@@ -1,0 +1,11 @@
+apiVersion: stackgres.io/v1
+kind: SGDbOps
+metadata:
+  namespace: buildonoss
+  name: upgrade-144-to-145
+spec:
+  op: minorVersionUpgrade
+  minorVersionUpgrade:
+    method: InPlace
+    postgresVersion: "14.5"
+  sgCluster: pg
