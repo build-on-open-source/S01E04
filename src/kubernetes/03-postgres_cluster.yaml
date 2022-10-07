@@ -1,0 +1,47 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: buildonoss
+
+---
+
+apiVersion: stackgres.io/v1
+kind: SGInstanceProfile
+metadata:
+  namespace: buildonoss
+  name: 'c7g.large'
+spec:
+  cpu: "2"
+  memory: "4Gi"
+
+---
+
+apiVersion: stackgres.io/v1
+kind: SGPostgresConfig
+metadata:
+  namespace: buildonoss
+  name: 'base-14-c7g.large'
+spec:
+  postgresVersion: "14"
+  postgresql.conf:
+    shared_buffers: '1GB'
+    jit: 'off'
+
+---
+
+apiVersion: stackgres.io/v1
+kind: SGCluster
+metadata:
+  namespace: buildonoss
+  name: pg
+spec:
+  postgres:
+    version: '14.4'
+  instances: 2
+  sgInstanceProfile: 'c7g.large'
+  pods:
+    persistentVolume:
+      size: '20Gi'
+  configurations:
+    sgPostgresConfig: 'base-14-c7g.large'
+  prometheusAutobind: true
